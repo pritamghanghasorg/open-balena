@@ -41,11 +41,11 @@ migrate_data_to_remote_s3() {
         export DOCKER_HOST="${DOCKER_HOST}"
     fi
 
-    REGISTRY_CONTAINER="$(docker ps | grep registry_ | awk '{print $1}')"
+    REGISTRY_CONTAINER="$(docker ps | grep openbalena_s3 | awk '{print $1}')"
 
     if [ -z "${REGISTRY_CONTAINER}" ]; then exit 2; fi
 
-    REGISTRY_VOLUME="$(docker inspect "${REGISTRY_CONTAINER}" | jq -r '.[].Mounts | map(select(.Destination=="/data")) | .[0].Source')"
+    REGISTRY_VOLUME="$(docker inspect "${REGISTRY_CONTAINER}" | jq -r '.[].Mounts | map(select(.Destination=="/export")) | .[0].Source')"
 
     if [ -z "${REGISTRY_VOLUME}" ]; then exit 3; fi
 
@@ -57,10 +57,6 @@ migrate_data_to_remote_s3() {
         -e AWS_SECRET_ACCESS_KEY="${SECRET_KEY}" \
         -e BUCKET="${BUCKET}" \
         -e ENDPOINT="${ENDPOINT}" \
-        --name "migrate-registry" debian:buster \
-        sh -c "\
-        apt-get -y update && \
-        apt-get install -y awscli && \
-        aws --endpoint-url ${ENDPOINT} s3 sync /data/docker/ s3://${BUCKET}/data/docker/ \
-        "
+        --name "migrate-registry" amazon/aws-cli \
+        s3 --endpoint-url ${ENDPOINT} sync /data/registry-data/data s3://${BUCKET}/data
 }
