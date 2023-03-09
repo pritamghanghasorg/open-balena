@@ -5,7 +5,6 @@ volumes:
   cert-provider: {}
   db: {}
   redis: {}
-  s3: {}
 
 services:
   api:
@@ -15,7 +14,6 @@ services:
     image: balena/open-balena-api:${OPENBALENA_API_VERSION_TAG}
     depends_on:
       - db
-      - s3
       - redis
     environment:
       API_VPN_SERVICE_API_KEY: ${OPENBALENA_API_VPN_SERVICE_API_KEY}
@@ -62,7 +60,6 @@ services:
       service: component
     image: balena/open-balena-registry:${OPENBALENA_REGISTRY_VERSION_TAG}
     depends_on:
-      - s3
       - redis
     environment:
       API_TOKENAUTH_CRT: ${OPENBALENA_TOKEN_AUTH_PUB}
@@ -117,18 +114,6 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
-  s3:
-    extends:
-      file: ./common.yml
-      service: component
-    image: balena/open-balena-s3:${OPENBALENA_S3_VERSION_TAG}
-    volumes:
-      - s3:/export
-    environment:
-      S3_MINIO_ACCESS_KEY: ${OPENBALENA_S3_ACCESS_KEY}
-      S3_MINIO_SECRET_KEY: ${OPENBALENA_S3_SECRET_KEY}
-      BUCKETS: ${OPENBALENA_S3_BUCKETS}
-
   redis:
     extends:
       file: ./common.yml
@@ -146,7 +131,6 @@ services:
       - api
       - cert-provider
       - db
-      - s3
       - redis
       - registry
       - vpn
@@ -165,7 +149,6 @@ services:
           - registry.${OPENBALENA_HOST_NAME}
           - vpn.${OPENBALENA_HOST_NAME}
           - db.${OPENBALENA_HOST_NAME}
-          - s3.${OPENBALENA_HOST_NAME}
           - redis.${OPENBALENA_HOST_NAME}
           - tunnel.${OPENBALENA_HOST_NAME}
     environment:
@@ -183,5 +166,5 @@ services:
       - cert-provider:/usr/src/app/certs
     environment:
       ACTIVE: ${OPENBALENA_ACME_CERT_ENABLED}
-      DOMAINS: "api.${OPENBALENA_HOST_NAME},registry.${OPENBALENA_HOST_NAME},s3.${OPENBALENA_HOST_NAME},vpn.${OPENBALENA_HOST_NAME},tunnel.${OPENBALENA_HOST_NAME},admin.${OPENBALENA_HOST_NAME}"
+      DOMAINS: "api.${OPENBALENA_HOST_NAME},registry.${OPENBALENA_HOST_NAME},vpn.${OPENBALENA_HOST_NAME},tunnel.${OPENBALENA_HOST_NAME},admin.${OPENBALENA_HOST_NAME}"
       OUTPUT_PEM: /certs/open-balena.pem
