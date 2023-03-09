@@ -166,6 +166,7 @@ services:
           - db.${OPENBALENA_HOST_NAME}
           - redis.${OPENBALENA_HOST_NAME}
           - tunnel.${OPENBALENA_HOST_NAME}
+          - admin.${OPENBALENA_HOST_NAME}
     environment:
       BALENA_HAPROXY_CRT: ${OPENBALENA_ROOT_CRT}
       BALENA_HAPROXY_KEY: ${OPENBALENA_ROOT_KEY}
