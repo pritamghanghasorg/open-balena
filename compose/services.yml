@@ -11,7 +11,7 @@ services:
     extends:
       file: ./common.yml
       service: component
-    image: balena/open-balena-api:${OPENBALENA_API_VERSION_TAG}
+    image: pritamghanghas/neblena-api:${OPENBALENA_API_VERSION_TAG}-nebra
     depends_on:
       - db
       - redis
