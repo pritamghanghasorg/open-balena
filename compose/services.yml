@@ -167,6 +167,7 @@ services:
           - redis.${OPENBALENA_HOST_NAME}
           - tunnel.${OPENBALENA_HOST_NAME}
           - admin.${OPENBALENA_HOST_NAME}
+          - postgrest.${OPENBALENA_HOST_NAME}
     environment:
       BALENA_HAPROXY_CRT: ${OPENBALENA_ROOT_CRT}
       BALENA_HAPROXY_KEY: ${OPENBALENA_ROOT_KEY}
@@ -182,5 +183,5 @@ services:
       - cert-provider:/usr/src/app/certs
     environment:
       ACTIVE: ${OPENBALENA_ACME_CERT_ENABLED}
-      DOMAINS: "api.${OPENBALENA_HOST_NAME},registry.${OPENBALENA_HOST_NAME},vpn.${OPENBALENA_HOST_NAME},tunnel.${OPENBALENA_HOST_NAME},admin.${OPENBALENA_HOST_NAME}"
+      DOMAINS: "api.${OPENBALENA_HOST_NAME},registry.${OPENBALENA_HOST_NAME},vpn.${OPENBALENA_HOST_NAME},tunnel.${OPENBALENA_HOST_NAME},admin.${OPENBALENA_HOST_NAME},postgrest.${OPENBALENA_HOST_NAME}"
       OUTPUT_PEM: /certs/open-balena.pem
